@@ -12,6 +12,20 @@ def rod_cutting_memo(length: int, prices: List[int]) -> Dict:
     Returns:
         Dict with the maximum profit and the list of cuts
     """
+
+
+def rod_cutting_table(length: int, prices: List[int]) -> Dict:
+    """
+    Finds the optimal way to cut the rod using tabulation
+
+    Args:
+        length: length of the rod
+        prices: list of prices, where prices[i] is the price of a rod of length i+1
+
+    Returns:
+        Dict with the maximum profit and the list of cuts
+    """
+
     memo = {0: {"max_profit": 0, "cuts": [], "number_of_cuts": 0}}
 
     if length <= 0 or prices == []:
@@ -33,23 +47,6 @@ def rod_cutting_memo(length: int, prices: List[int]) -> Dict:
         }
 
     return memo[length]
-
-
-def rod_cutting_table(length: int, prices: List[int]) -> Dict:
-    """
-    Finds the optimal way to cut the rod using tabulation
-
-    Args:
-        length: length of the rod
-        prices: list of prices, where prices[i] is the price of a rod of length i+1
-
-    Returns:
-        Dict with the maximum profit and the list of cuts
-    """
-
-    # Your code should be here
-
-    return {"max_profit": None, "cuts": None, "number_of_cuts": None}
 
 
 def run_tests():
