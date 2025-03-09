@@ -1,7 +1,7 @@
 from typing import List, Dict
 
 
-def rod_cutting_memo(length: int, prices: List[int]) -> Dict:
+def rod_cutting_memo(length: int, prices: List[int], memo=None) -> Dict:
     """
     Finds the optimal way to cut the rod using memoization
 
@@ -12,6 +12,33 @@ def rod_cutting_memo(length: int, prices: List[int]) -> Dict:
     Returns:
         Dict with the maximum profit and the list of cuts
     """
+    if memo is None:
+        memo = {}
+
+    if length <= 0 or prices == []:
+        return {"max_profit": 0, "cuts": [], "number_of_cuts": 0}
+
+    if length in memo:
+        return memo[length]
+
+    max_profit = 0
+    best_cuts = []
+
+    for i in range(1, length + 1):
+        previous_result = rod_cutting_memo(length - i, prices, memo)
+        profit = prices[i - 1] + previous_result["max_profit"]
+
+        if profit > max_profit:
+            max_profit = profit
+            best_cuts = [i] + previous_result["cuts"]
+
+    memo[length] = {
+        "max_profit": max_profit,
+        "cuts": best_cuts,
+        "number_of_cuts": len(best_cuts),
+    }
+
+    return memo[length]
 
 
 def rod_cutting_table(length: int, prices: List[int]) -> Dict:
@@ -26,27 +53,27 @@ def rod_cutting_table(length: int, prices: List[int]) -> Dict:
         Dict with the maximum profit and the list of cuts
     """
 
-    memo = {0: {"max_profit": 0, "cuts": [], "number_of_cuts": 0}}
+    table = {0: {"max_profit": 0, "cuts": [], "number_of_cuts": 0}}
 
     if length <= 0 or prices == []:
-        return memo
+        return table
 
     for i in range(1, length + 1):
         max_profit = 0
         best_cuts = []
         for j in range(1, i + 1):
-            profit = prices[j - 1] + memo[i - j]["max_profit"]
+            profit = prices[j - 1] + table[i - j]["max_profit"]
             if profit > max_profit:
                 max_profit = profit
-                best_cuts = [j] + memo[i - j]["cuts"]
+                best_cuts = [j] + table[i - j]["cuts"]
 
-        memo[i] = {
+        table[i] = {
             "max_profit": max_profit,
             "cuts": best_cuts,
             "number_of_cuts": len(best_cuts),
         }
 
-    return memo[length]
+    return table[length]
 
 
 def run_tests():
